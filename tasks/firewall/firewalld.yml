@@ -53,3 +53,10 @@
     permanent: yes
     state: enabled
   become: yes
+
+- name: Block SSH brute-forcing
+  firewalld:
+    rich_rule: rule family="ipv4" service name="ssh" log prefix="SSH Bruteforce:" level="warning" limit value="4/d" accept limit value="4/d"
+    permanent: true
+    state: enabled
+  become: yes
