@@ -1,0 +1,50 @@
+- name: Uninstall old docker versions
+  apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+  become: yes
+
+- name: Install dependencies
+  apt:
+    name:
+      - ca-certificates
+      - curl 
+      - gnupg 
+      - lsb-release
+    state: present
+  become: yes
+
+- name: Create keyrings directory if it does not exist
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+  become: yes
+
+- name: Add an Apt signing key to docker keyring file
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  become: yes
+
+- name: Set up docker repository
+  shell:  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  become: yes
+
+
+- name: Run "apt-get update"
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install Docker Community Edition
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+  become: yes

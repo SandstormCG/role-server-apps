@@ -1,0 +1,85 @@
+- name: Install nginx if it isn't already
+  package:
+    name: nginx
+  become: yes
+
+- name: Copy the cert files
+  copy:
+    src: "{{ ansible_ext }}files/{{ item }}"
+    dest: "/etc/ssl/certs/{{ item }}"
+    owner: root
+    group: root
+    force: yes
+  become: yes
+  with_items: "{{ selfsigned_certs }}"
+
+- name: Create snippers directory
+  file:
+    path: /etc/nginx/snippets/
+    state: directory
+  become: yes
+
+- name: Generate ssl-params.conf file
+  template:
+    src: ssl-params.j2
+    dest: /etc/nginx/snippets/ssl-params.conf
+    group: root
+    owner: root
+  become: yes
+  
+- name: Generate whitelist.conf file
+  template:
+    src: whitelist.j2
+    dest: /etc/nginx/snippets/whitelist.conf
+    group: root
+    owner: 
+  become: yes
+
+- name: Generate auth.conf file
+  template:
+    src: auth.j2
+    dest: /etc/nginx/snippets/auth.conf
+    group: root
+    owner: root
+  become: yes
+
+###########################################
+## Configure nginx reverse proxy
+###########################################
+
+- name: Set Leap nginx conf folder
+  set_fact:
+    conf_folder: /etc/nginx/vhosts.d 
+  when: distro=="leap"
+
+- name: Set Ubuntu nginx conf folder
+  set_fact:
+    conf_folder: /etc/nginx/sites-available
+  when: distro=="ub"
+
+- name: Generate nginx conf file
+  template:
+    src: "{{ item }}-site.j2"
+    dest: "{{ conf_folder }}/{{ item }}.conf"
+    group: root
+    owner: root
+    mode: 0644
+  with_items:
+    - "{{ dockers }}"
+  become: yes 
+
+- name: Soft link to enable site 
+  file:
+    src: "{{ conf_folder }}/{{ item }}"
+    dest: "{{ conf_folder }}/{{ item }}"
+    state: link
+  with_items:
+    - "{{ dockers }}"
+  become: yes
+  when: distro=="ub"
+ 
+#- name: Restart nginx service 
+#  systemd:
+#    name: nginx
+#    state: restarted
+#  become: yes

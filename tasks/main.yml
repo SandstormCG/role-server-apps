@@ -1,0 +1,16 @@
+---
+# tasks file for server-apps
+
+- name: Install & config fail2ban
+  include_tasks: fail2ban.yml
+
+- name: Install & config dockers with docker-compose 
+  include_tasks: docker/main.yml
+  when: not docker_inst.stat.exists
+
+- name: Install & config nginx
+  include_tasks: nginx.yml
+  when: not nginx_inst.stat.exists
+
+- name: Configure firewall
+  include_tasks: firewall/main.yml

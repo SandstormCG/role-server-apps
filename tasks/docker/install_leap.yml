@@ -1,0 +1,7 @@
+- name: Install docker-compose & docker
+  zypper:
+    name:
+      - python3-docker-compose
+    state: present
+    update_cache: yes
+  become: yes
