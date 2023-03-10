@@ -10,7 +10,6 @@ Role Variables
 
 * git_user --> git account name
 * volumes_folder --> where to link the docker volumes folder
-* dockers --> Array with the list of dockers. Example: `dockers: ["jellyfin","gitea"]`
 * ip_whitelist --> Ip or range for whitelisting.
 * ansible_ext --> Where to get ansible extra resources
 * selfsigned_certs --> Array with the names of the selfsigned certs. Example: `selfsigned_certs["domain-selfsig.crt","domain-selfsig.key"]`

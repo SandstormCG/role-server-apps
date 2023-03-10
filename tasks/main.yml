@@ -1,6 +1,12 @@
 ---
 # tasks file for server-apps
 
+- name: List of dockers for install & config
+  set_fact:
+    dockers:
+        - jellyfin
+        - gitea
+
 - name: Install & config fail2ban
   include_tasks: fail2ban.yml
 
