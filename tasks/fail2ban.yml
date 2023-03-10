@@ -9,3 +9,15 @@
     dest: /etc/fail2ban/fail2ban.d/
     force: yes
   become: yes
+
+- name: Enable fail2ban service 
+  systemd:
+    name: nginx
+    state: enabled
+  become: yes
+
+- name: Start fail2ban service 
+  systemd:
+    name: nginx
+    state: started
+  become: yes
