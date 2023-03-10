@@ -43,6 +43,15 @@
     owner: root
   become: yes
 
+
+- name: Generate syncthing.conf file
+  template:
+    src: syncthing-site.j2
+    dest: /etc/nginx/vhosts.d/syncthing.conf
+    group: root
+    owner: root
+  become: yes
+
 ###########################################
 ## Configure nginx reverse proxy
 ###########################################
