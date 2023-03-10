@@ -9,7 +9,7 @@ services:
     image: gitea/gitea:1.13.3
     container_name: gitea
     environment:
-      - USER_UID={{ user_uid }}
+      - USER_UID={{ git_uid }}
       - USER_GID={{ user_gid }}
       - DB_TYPE=postgres
       - DB_HOST=db:5432

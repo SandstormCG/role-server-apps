@@ -4,6 +4,14 @@
 - name: Install gitea prerequisistes
   include_tasks: gitea.yml
 
+- name: Variable for uid
+  command: "id -u git"
+  register: guid_command
+
+- name: Set user_uid var
+  set_fact:
+    git_uid: "{{ guid_command.stdout }}"
+
 ###########################################
 ## Create and link new docker volume folder
 ###########################################
